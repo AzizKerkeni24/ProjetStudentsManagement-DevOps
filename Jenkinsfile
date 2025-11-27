@@ -15,12 +15,7 @@ pipeline {
     }
     
     stages {
-        stage('Code Checkout') {
-            steps {
-                git branch: 'master', 
-                    url: 'https://github.com/balighlaouini55/DEVOPS-StudentMangementproject.git'
-            }
-        }
+        // ❌ SUPPRIMÉ: stage('Code Checkout') - Jenkins le fait déjà automatiquement
         
         stage('Code Build') {
             steps {
