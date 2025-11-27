@@ -49,8 +49,8 @@ pipeline {
                     
                     docker run -d --name student-app -p 8081:8089 \
                         -e SPRING_DATASOURCE_URL=jdbc:mysql://192.168.33.1:3306/studentdb \
-                        -e SPRING_DATASOURCE_USERNAME=student \
-                        -e SPRING_DATASOURCE_PASSWORD=student123 \
+                        -e SPRING_DATASOURCE_USERNAME=root \
+                        -e SPRING_DATASOURCE_PASSWORD= \
                         ${DOCKER_IMAGE}:latest
                 """
             }
