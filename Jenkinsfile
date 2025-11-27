@@ -46,7 +46,12 @@ pipeline {
                 sh """
                     docker stop student-app || true
                     docker rm student-app || true
-                    docker run -d --name student-app -p 8081:8080 ${DOCKER_IMAGE}:latest
+                    
+                    docker run -d --name student-app -p 8081:8089 \
+                        -e SPRING_DATASOURCE_URL=jdbc:mysql://192.168.33.1:3306/studentdb \
+                        -e SPRING_DATASOURCE_USERNAME=student \
+                        -e SPRING_DATASOURCE_PASSWORD=student123 \
+                        ${DOCKER_IMAGE}:latest
                 """
             }
         }
@@ -58,7 +63,7 @@ pipeline {
         }
         success {
             echo "=====Pipeline executed successfully ====="
-            echo "Application deployed at: http://192.168.33.10:8081"
+            echo "Application deployed at: http://192.168.33.10:8081/student"
         }
         failure {
             echo "======Pipeline execution failed======"
