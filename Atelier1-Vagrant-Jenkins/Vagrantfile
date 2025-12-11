@@ -1,0 +1,68 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # Use Ubuntu 20.04
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "aziz-devops"
+  
+  # Network configuration
+  config.vm.network "private_network", ip: "192.168.56.50"
+  
+  # VM resources
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+    vb.cpus = 2
+    vb.name = "Aziz-DevOps-VM"
+  end
+  
+  # Provisioning script - installs everything automatically
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "AZIZ DEVOPS WORKSHOP - INSTALLATION START"
+    echo "=========================================="
+    
+    # Update system
+    apt-get update
+    apt-get upgrade -y
+    
+    # Install Java 17
+    echo "[1/4] Installing Java 17..."
+    apt-get install -y openjdk-17-jdk
+    
+    # Install Maven
+    echo "[2/4] Installing Maven..."
+    apt-get install -y maven
+    
+    # Install Git
+    echo "[3/4] Installing Git..."
+    apt-get install -y git
+    
+    # Install Jenkins
+    echo "[4/4] Installing Jenkins..."
+    wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | apt-key add -
+    sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+    apt-get update
+    apt-get install -y jenkins
+    
+    # Start Jenkins
+    systemctl start jenkins
+    systemctl enable jenkins
+    
+    # Create a test file
+    echo "Aziz DevOps Workshop - 12/11/2025 02:18:40" > /vagrant/install-complete.txt
+    
+    # Display success message
+    echo " "
+    echo "=========================================="
+    echo "? INSTALLATION COMPLETE!"
+    echo "=========================================="
+    echo "Jenkins URL: http://192.168.56.50:8080"
+    echo " "
+    echo "Initial admin password (COPY THIS):"
+    echo "----------------------------------"
+    sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+    echo "----------------------------------"
+    echo "=========================================="
+  SHELL
+end
